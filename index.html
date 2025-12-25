@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Jiniya! ✨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff758f;
+            --accent: #ffb3c1;
+            --bg-gradient: linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .cursive { font-family: 'Dancing Script', cursive; }
+        .serif { font-family: 'Playfair Display', serif; }
+
+        /* Animated Heart & Bubble Background */
+        .decoration-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.4;
+            animation: floatUp var(--duration) linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) translateX(20px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Fireworks Canvas */
+        #fireworks-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 2000;
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.15);
+        }
+
+        /* Gift Box Styles */
+        .gift-container { perspective: 1000px; cursor: pointer; }
+        .gift-box {
+            width: 140px; height: 140px; background: var(--primary);
+            position: relative; transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 0 auto;
+        }
+        .gift-box::before { content: ''; position: absolute; left: 50%; top: 0; width: 25px; height: 100%; background: #fff; transform: translateX(-50%); }
+        .gift-box::after { content: ''; position: absolute; left: 0; top: 50%; width: 100%; height: 25px; background: #fff; transform: translateY(-50%); }
+        
+        .gift-lid {
+            position: absolute; top: -15px; left: -10px; width: 160px; height: 30px;
+            background: #ff4d6d; border: 3px solid #fff; z-index: 10;
+            transition: all 0.6s ease;
+        }
+        .gift-container.open .gift-lid { transform: translateY(-80px) rotateX(120deg); opacity: 0; }
+
+        /* Cake Upgrade */
+        .cake-layer { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 20px 20px 0 0; }
+        .layer-1 { width: 200px; height: 70px; background: #ff85a2; bottom: 0; }
+        .layer-2 { width: 160px; height: 60px; background: #ffb3c1; bottom: 70px; }
+        .layer-3 { width: 110px; height: 50px; background: #ffe5ec; bottom: 130px; }
+        
+        .candle {
+            position: absolute; bottom: 180px; left: 50%; transform: translateX(-50%);
+            width: 12px; height: 45px; background: linear-gradient(to right, #ffd700, #fff);
+            border-radius: 6px; z-index: 4;
+        }
+        .flame {
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            width: 18px; height: 30px; background: #ff9800; border-radius: 50%;
+            filter: blur(1px); animation: flicker 0.1s infinite alternate; cursor: pointer;
+        }
+
+        /* 3D Tilt for Photos */
+        .photo-card {
+            transition: transform 0.2s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        /* Pulse for Music */
+        .music-pulse {
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Music Visualizer bars */
+        .bar { width: 3px; height: 10px; background: #ff4d6d; display: inline-block; margin: 0 1px; animation: bounce 0.5s infinite alternate; }
+        .bar:nth-child(2) { animation-delay: 0.1s; }
+        .bar:nth-child(3) { animation-delay: 0.2s; }
+        @keyframes bounce { from { height: 5px; } to { height: 20px; } }
+    </style>
+</head>
+<body>
+
+    <div class="decoration-bg" id="decoration-bg"></div>
+    <canvas id="fireworks-canvas"></canvas>
+
+    <!-- Intro Overlay -->
+    <div id="welcome-overlay" class="fixed inset-0 bg-white z-[3000] flex flex-col items-center justify-center text-center p-6 transition-all duration-1000">
+        <div class="space-y-8">
+            <h1 class="cursive text-5xl md:text-7xl text-pink-500">Something Special for Jiniya...</h1>
+            <div class="gift-container" onclick="startCelebration()">
+                <div class="gift-lid"></div>
+                <div class="gift-box"></div>
+                <div class="absolute -bottom-12 inset-x-0">
+                    <p class="text-pink-400 font-bold animate-bounce">Click to Unbox Your Birthday!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music Control & Song Title -->
+    <!-- SONG URL: You can replace this src with your favorite "Bestie Birthday" mp3 link! -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="fixed bottom-6 right-6 z-[1000] flex flex-col items-end gap-3">
+        <div id="now-playing" class="hidden bg-white/90 px-4 py-2 rounded-2xl shadow-xl border border-pink-200 flex items-center gap-3 animate-bounce">
+            <div class="flex items-end h-5">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <span class="text-xs font-bold text-pink-500 uppercase tracking-widest">A Song for My Bestie 🎶</span>
+        </div>
+        
+        <div class="relative flex items-center justify-center">
+            <div id="music-pulse-ring" class="absolute w-16 h-16 bg-pink-400 rounded-full music-pulse hidden"></div>
+            <button onclick="toggleMusic()" class="relative bg-white/95 p-5 rounded-full shadow-2xl border-2 border-pink-200 hover:scale-110 transition-all">
+                <span id="music-icon" class="text-2xl">🎵</span>
+            </button>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-6 py-24 relative">
+        
+        <!-- Hero Section -->
+        <section class="text-center mb-40">
+            <div class="relative inline-block reveal">
+                <span class="absolute -top-16 -left-16 text-6xl animate-bounce">🎂</span>
+                <span class="absolute -top-16 -right-16 text-6xl animate-bounce" style="animation-delay: 0.5s">👑</span>
+                <h2 class="uppercase tracking-[0.5em] text-pink-400 font-bold mb-6 text-sm md:text-base">Celebrating You</h2>
+                <h1 class="serif text-8xl md:text-[11rem] text-pink-600 italic leading-none drop-shadow-2xl">Jiniya</h1>
+                <p class="cursive text-3xl text-pink-400 mt-6 italic">Our favorite person's big day!</p>
+            </div>
+        </section>
+
+        <!-- Interactive Quote Feature -->
+        <section class="mb-40 text-center reveal">
+            <div class="glass-card max-w-2xl mx-auto p-12 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-300 via-pink-500 to-pink-300"></div>
+                <h3 class="text-pink-600 font-bold uppercase tracking-widest text-sm mb-6">A Reason to Smile</h3>
+                <div id="quote-display" class="serif text-3xl italic text-gray-700 mb-10 h-24 flex items-center justify-center px-4">
+                    "You make the world a better place just by being in it."
+                </div>
+                <button onclick="generateQuote()" class="bg-pink-500 text-white px-8 py-4 rounded-full font-bold shadow-lg hover:bg-pink-600 hover:shadow-pink-200 transform transition active:scale-95">
+                    Why Jiniya is the Best ✨
+                </button>
+            </div>
+        </section>
+
+        <!-- Interactive Surprise Section -->
+        <div class="grid md:grid-cols-2 gap-16 mb-40">
+            <section class="glass-card p-12 text-center reveal flex flex-col items-center justify-center">
+                <h3 class="cursive text-4xl text-pink-600 mb-8">The Birthday Ritual</h3>
+                <p class="text-gray-500 mb-12 italic">Make a wish and click the flame...</p>
+                <div class="relative h-[250px] w-full">
+                    <div class="cake-layer layer-1"></div>
+                    <div class="cake-layer layer-2"></div>
+                    <div class="cake-layer layer-3"></div>
+                    <div class="candle">
+                        <div class="flame" id="flame" onclick="blowOut()"></div>
+                    </div>
+                </div>
+                <div id="wish-text" class="hidden mt-10 text-3xl font-bold text-pink-500 animate-pulse cursive">
+                    Magic is happening! ✨
+                </div>
+            </section>
+
+            <section class="glass-card p-12 flex flex-col justify-center items-center reveal text-center" style="transition-delay: 0.2s">
+                <div class="mb-8">
+                    <div class="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-4xl">⏳</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-700 mb-2">Moments of Joy</h3>
+                </div>
+                <div id="timer" class="text-6xl font-light text-pink-500 tabular-nums bg-white/60 px-10 py-6 rounded-3xl shadow-inner border border-pink-100">
+                    00:00:00
+                </div>
+                <p class="text-xs text-pink-400 mt-6 uppercase tracking-widest font-bold">Time since this journey began</p>
+            </section>
+        </div>
+
+        <!-- Photo Gallery with 3D Tilt -->
+        <section class="mb-40">
+            <h3 class="serif text-6xl text-center text-pink-600 mb-20 italic">The Memory Vault</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <!-- Slot 1 -->
+                <div class="photo-card group reveal cursor-pointer" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
+                    <div class="overflow-hidden rounded-[2rem] shadow-2xl relative">
+                        <img src="https://images.unsplash.com/photo-1513272795195-985ad06622e7?auto=format&fit=crop&q=80&w=600" class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-pink-900/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center p-8 backdrop-blur-sm">
+                            <p class="text-white text-xl cursive text-center">That golden hour glow! ✨</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slot 2 -->
+                <div class="photo-card group reveal cursor-pointer" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)" style="transition-delay: 0.2s">
+                    <div class="overflow-hidden rounded-[2rem] shadow-2xl relative">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=600" class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-pink-900/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center p-8 backdrop-blur-sm">
+                            <p class="text-white text-xl cursive text-center">Your iconic smile. 💖</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slot 3 -->
+                <div class="photo-card group reveal cursor-pointer" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)" style="transition-delay: 0.4s">
+                    <div class="overflow-hidden rounded-[2rem] shadow-2xl relative">
+                        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=600" class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-pink-900/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center p-8 backdrop-blur-sm">
+                            <p class="text-white text-xl cursive text-center">Always better together. 👯‍♀️</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Heartfelt Note with Typewriter -->
+        <section class="glass-card p-12 md:p-24 text-center reveal relative" id="note-section">
+            <div class="absolute top-10 right-10 text-6xl opacity-10">✍️</div>
+            <h3 class="serif text-5xl italic text-pink-600 mb-12">Letter to my Bestie</h3>
+            <div class="max-w-3xl mx-auto min-h-[200px]">
+                <p id="typewriter-text" class="text-2xl text-gray-700 leading-relaxed italic"></p>
+                <div id="signature" class="mt-12 opacity-0 transition-opacity duration-1000">
+                    <span class="text-pink-500 font-bold text-4xl cursive">With endless love, Your Bestie</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-24 text-pink-400 text-sm tracking-[0.4em] uppercase border-t border-pink-100 mt-20">
+        Curated for Jiniya &bull; Est. 2025
+    </footer>
+
+    <script>
+        // Start Celebration
+        function startCelebration() {
+            const overlay = document.getElementById('welcome-overlay');
+            const gift = overlay.querySelector('.gift-container');
+            
+            gift.classList.add('open');
+            
+            setTimeout(() => {
+                overlay.classList.add('opacity-0');
+                fireConfetti();
+                toggleMusic(true);
+                setTimeout(() => overlay.style.display = 'none', 1000);
+            }, 800);
+        }
+
+        // Decor Background (Hearts, Bubbles, Sparkles)
+        function createDecorations() {
+            const container = document.getElementById('decoration-bg');
+            const items = ['❤️', '💖', '✨', '🌸', '🎀', '🎈', '🍭'];
+            const wishes = ['Love', 'Joy', 'Laughter', 'Success', 'Health', 'Happiness'];
+            
+            setInterval(() => {
+                const el = document.createElement('div');
+                el.className = 'floating-element';
+                const isWish = Math.random() > 0.8;
+                
+                if (isWish) {
+                    el.innerText = wishes[Math.floor(Math.random() * wishes.length)];
+                    el.classList.add('bg-white/40', 'px-3', 'py-1', 'rounded-full', 'text-pink-400', 'text-xs', 'font-bold', 'border', 'border-pink-200');
+                } else {
+                    el.innerText = items[Math.floor(Math.random() * items.length)];
+                    el.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                }
+                
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.setProperty('--duration', (Math.random() * 5 + 5) + 's');
+                container.appendChild(el);
+                setTimeout(() => el.remove(), 10000);
+            }, 500);
+        }
+        createDecorations();
+
+        // Reveal Scroll Animation
+        function reveal() {
+            const reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(r => {
+                const windowHeight = window.innerHeight;
+                const elementTop = r.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    r.classList.add("active");
+                    if (r.id === 'note-section' && !typewriterStarted) {
+                        startTypewriter();
+                    }
+                }
+            });
+        }
+        window.addEventListener("scroll", reveal);
+
+        // Bestie Quote Generator
+        const quotes = [
+            "You have a heart of gold and a soul of pure sunshine.",
+            "You are the sister I got to choose for myself.",
+            "Life is 1000% more fun when you're around.",
+            "Thank you for being the person who knows me best.",
+            "You're not just my best friend, you're my favorite human.",
+            "Whatever life throws at us, I'm glad I have you by my side.",
+            "You deserve the world, and then some!",
+            "Your energy is literally a mood booster for everyone."
+        ];
+        function generateQuote() {
+            const display = document.getElementById('quote-display');
+            display.style.opacity = 0;
+            setTimeout(() => {
+                display.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+                display.style.opacity = 1;
+                confetti({ particleCount: 20, spread: 50, origin: { y: 0.8 }, colors: ['#ff4d6d'] });
+            }, 300);
+        }
+
+        // Blow Candle & Fireworks Show
+        function blowOut() {
+            document.getElementById('flame').style.display = 'none';
+            document.getElementById('wish-text').classList.remove('hidden');
+            fireConfetti();
+            initFireworks(); // Start full-screen fireworks
+        }
+
+        // Typewriter Logic
+        let typewriterStarted = false;
+        const letterText = "To my dearest Jiniya... Watching you grow and shine is one of my greatest joys. You bring a special kind of magic into every room you enter. On your birthday, I want you to know how much you are loved and appreciated. May this year be filled with unexpected adventures, belly-aching laughs, and all the happiness you deserve. You're a masterpiece, bestie.";
+        function startTypewriter() {
+            typewriterStarted = true;
+            let i = 0;
+            const target = document.getElementById('typewriter-text');
+            function type() {
+                if (i < letterText.length) {
+                    target.innerHTML += letterText.charAt(i);
+                    i++;
+                    setTimeout(type, 40);
+                } else {
+                    document.getElementById('signature').style.opacity = 1;
+                }
+            }
+            type();
+        }
+
+        // Photo Tilt Logic
+        function tilt(e, el) {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        }
+        function resetTilt(el) {
+            el.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        }
+
+        // Music
+        let isPlaying = false;
+        const music = document.getElementById('bg-music');
+        function toggleMusic(forcePlay = false) {
+            const pulse = document.getElementById('music-pulse-ring');
+            const indicator = document.getElementById('now-playing');
+            if (forcePlay || !isPlaying) {
+                music.play().catch(() => {});
+                document.getElementById('music-icon').innerText = '⏸️';
+                pulse.classList.remove('hidden');
+                indicator.classList.remove('hidden');
+                isPlaying = true;
+            } else {
+                music.pause();
+                document.getElementById('music-icon').innerText = '🎵';
+                pulse.classList.add('hidden');
+                indicator.classList.add('hidden');
+                isPlaying = false;
+            }
+        }
+
+        // Fireworks Engine (Canvas)
+        function initFireworks() {
+            const canvas = document.getElementById('fireworks-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            function createFirework() {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height / 2;
+                const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                for (let i = 0; i < 50; i++) {
+                    particles.push({
+                        x, y,
+                        vx: Math.cos(i) * Math.random() * 5,
+                        vy: Math.sin(i) * Math.random() * 5,
+                        life: 100,
+                        color
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.fillStyle = 'rgba(255, 240, 243, 0.1)';
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach((p, i) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.05;
+                    p.life--;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    if (p.life <= 0) particles.splice(i, 1);
+                });
+
+                if (Math.random() < 0.05) createFirework();
+                requestAnimationFrame(animate);
+            }
+            animate();
+            setTimeout(() => { canvas.style.opacity = 0; }, 10000);
+        }
+
+        // Confetti
+        function fireConfetti() {
+            const count = 200;
+            const defaults = { origin: { y: 0.7 }, zIndex: 10000 };
+            function fire(particleRatio, opts) {
+                confetti(Object.assign({}, defaults, opts, {
+                    particleCount: Math.floor(count * particleRatio)
+                }));
+            }
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+        }
+
+        // Timer
+        let startTime = Date.now();
+        setInterval(() => {
+            const elapsed = Date.now() - startTime;
+            const h = Math.floor(elapsed / 3600000);
+            const m = Math.floor((elapsed % 3600000) / 60000);
+            const s = Math.floor((elapsed % 60000) / 1000);
+            document.getElementById('timer').innerText = 
+                `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }, 1000);
+
+        reveal();
+    </script>
+</body>
+</html>
